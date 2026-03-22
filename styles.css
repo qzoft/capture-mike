@@ -1,0 +1,418 @@
+/* === Review actions (Save / Discard) === */
+.card-review-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-save {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--success);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-discard {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-discard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.card-transcript--empty {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* === Reset & Base === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e74c3c;
+  --accent-glow: rgba(231, 76, 60, 0.4);
+  --text: #eee;
+  --text-dim: #aaa;
+  --danger: #c0392b;
+  --success: #27ae60;
+  --radius: 12px;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px;
+  padding-bottom: 160px; /* space for fixed bottom bar */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === Transcript Area (fills top) === */
+#transcript-area {
+  flex: 1;
+  padding: 16px 0;
+  overflow-y: auto;
+}
+
+#version {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+/* === Bottom Bar === */
+#bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: var(--surface);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 50;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+#bottom-center {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  width: 100px;
+}
+
+#bar-save-btn {
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--success);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#bar-discard-btn {
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#bar-save-btn:disabled,
+#bar-discard-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#bar-status {
+  font-size: 0.8rem;
+  text-align: center;
+  margin: 0;
+}
+
+.bar-status-saving { color: var(--text-dim); }
+.bar-status-success { color: var(--success); }
+.bar-status-error { color: var(--danger); }
+
+#record-btn {
+  flex: 1;
+  align-self: stretch;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+#record-btn:active,
+#record-btn.recording {
+  background: #c0392b;
+  box-shadow: 0 0 40px var(--accent-glow), 0 0 80px var(--accent-glow);
+}
+
+#record-btn.recording {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 40px var(--accent-glow); }
+  50% { box-shadow: 0 0 60px var(--accent-glow), 0 0 100px var(--accent-glow); }
+}
+
+#settings-btn {
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top));
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+#settings-btn:active {
+  opacity: 0.6;
+}
+
+#record-status {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+#record-timer {
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  margin: 0;
+}
+
+.active-lang {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin: 2px 0 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#empty-msg {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 40px 16px;
+  font-size: 0.9rem;
+}
+
+/* === Recording Card === */
+.recording-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recording-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recording-card .card-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.recording-card .card-meta {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* === Permission Error === */
+#permission-error {
+  background: var(--danger);
+  color: white;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+/* === Settings Modal === */
+#settings-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+#settings-panel {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+}
+
+#settings-panel h2 {
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+}
+
+#settings-panel label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+
+#settings-panel input,
+#settings-panel select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+#settings-panel input:focus,
+#settings-panel select:focus {
+  border-color: var(--accent);
+}
+
+#settings-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+#settings-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#settings-save {
+  background: var(--accent);
+  color: white;
+}
+
+#settings-close {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+#settings-status {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+#settings-status.success { color: var(--success); }
+#settings-status.error { color: var(--danger); }
+
+/* === Transcript Preview === */
+#transcript-preview {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-height: 80px;
+  overflow-y: auto;
+  text-align: center;
+  padding: 0 16px;
+  font-style: italic;
+}
+
+/* === Card Transcript & Save Status === */
+.card-transcript {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.card-save-status {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.card-save-status.success { color: var(--success); }
+.card-save-status.error { color: var(--danger); }
+.card-save-status.saving { color: var(--text-dim); }
+
+/* === Config Warning === */
+#config-warning {
+  background: #f39c12;
+  color: #1a1a2e;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Clearing cache...</title>
+  <style>
+    body { background: #1a1a2e; color: #eee; font-family: system-ui; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+    .status { font-size: 1.2rem; }
+    .done { color: #27ae60; }
+    .step { margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="status" id="status">Clearing cache...</div>
+  <script>
+    const status = document.getElementById("status");
+    let log = "";
+
+    function addStep(msg) {
+      log += "<div class='step'>" + msg + "</div>";
+      status.innerHTML = log;
+    }
+
+    (async () => {
+      try {
+        // 1. Unregister all service workers
+        if ("serviceWorker" in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) {
+            await reg.unregister();
+          }
+          addStep("✓ Unregistered " + regs.length + " service worker(s)");
+        } else {
+          addStep("— No service worker support");
+        }
+
+        // 2. Clear all caches
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          for (const key of keys) {
+            await caches.delete(key);
+          }
+          addStep("✓ Cleared " + keys.length + " cache(s)");
+        } else {
+          addStep("— No Cache API support");
+        }
+
+        // 3. Clear localStorage
+        localStorage.clear();
+        addStep("✓ Cleared localStorage");
+
+        addStep("<br><span class='done'>All clear! Redirecting in 2 seconds...</span>");
+
+        // 4. Redirect to main page with cache-busting param
+        setTimeout(() => {
+          window.location.href = "index.html?bust=" + Date.now();
+        }, 2000);
+
+      } catch (err) {
+        addStep("✗ Error: " + err.message);
+      }
+    })();
+  </script>
+</body>
+</html>
