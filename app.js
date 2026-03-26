@@ -38,6 +38,7 @@
   let interimTranscript = "";
   let pendingTranscript = "";
   let pendingCreatedAt = "";
+  let accumulatedDuration = 0;
 
   // --- MIME type detection (Safari prefers audio/mp4) ---
   function getSupportedMimeType() {
@@ -331,20 +332,33 @@
         stream.getTracks().forEach((t) => t.stop());
 
         const finalTranscript = stopTranscription();
+        const segmentDuration = Date.now() - startTime;
 
-        // No transcript — nothing to show
+        // No transcript captured this segment
         if (!finalTranscript) {
+          // Re-enable buttons if we already have pending transcript from earlier segments
+          if (pendingTranscript) {
+            barSaveBtn.disabled = false;
+            barDiscardBtn.disabled = false;
+          }
           return;
         }
 
-        const duration = Date.now() - startTime;
-        const createdAt = new Date().toISOString();
-
-        addRecordingCard({ createdAt, duration }, finalTranscript);
+        if (pendingTranscript) {
+          // Continuing: append new transcript to existing
+          pendingTranscript = pendingTranscript.trim() + " " + finalTranscript;
+          accumulatedDuration += segmentDuration;
+          updatePendingCard(pendingTranscript, accumulatedDuration);
+        } else {
+          // New recording
+          const createdAt = new Date().toISOString();
+          pendingCreatedAt = createdAt;
+          pendingTranscript = finalTranscript;
+          accumulatedDuration = segmentDuration;
+          addRecordingCard({ createdAt, duration: segmentDuration }, finalTranscript);
+        }
 
         // Enable Save/Discard buttons
-        pendingTranscript = finalTranscript;
-        pendingCreatedAt = createdAt;
         barSaveBtn.disabled = false;
         barDiscardBtn.disabled = false;
         barStatus.textContent = "";
@@ -355,6 +369,9 @@
       isRecording = true;
       recordBtn.classList.add("recording");
       if (recordStatus) recordStatus.textContent = "Recording…";
+      // Disable save/discard while actively recording
+      barSaveBtn.disabled = true;
+      barDiscardBtn.disabled = true;
       startTimer();
       startTranscription();
     } catch (err) {
@@ -441,12 +458,36 @@
     return card;
   }
 
+  function updatePendingCard(transcriptText, duration) {
+    const card = recordingsList.querySelector(".recording-card");
+    if (!card) return;
+
+    // Update transcript
+    const transcriptEl = card.querySelector(".card-transcript");
+    if (transcriptEl) {
+      transcriptEl.textContent = transcriptText;
+      transcriptEl.classList.remove("card-transcript--empty");
+    }
+
+    // Update duration in meta
+    const metaEl = card.querySelector(".card-meta");
+    if (metaEl) {
+      const date = new Date(pendingCreatedAt);
+      const dateStr =
+        date.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+        " " +
+        date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+      metaEl.textContent = dateStr + " · " + formatTime(duration);
+    }
+  }
+
   // --- Bottom bar Save/Discard handlers ---
   function disableBarButtons() {
     barSaveBtn.disabled = true;
     barDiscardBtn.disabled = true;
     pendingTranscript = "";
     pendingCreatedAt = "";
+    accumulatedDuration = 0;
   }
 
   function removeLastCard() {
