@@ -346,7 +346,7 @@
 
         if (pendingTranscript) {
           // Continuing: append new transcript to existing
-          pendingTranscript += " " + finalTranscript;
+          pendingTranscript = pendingTranscript.trim() + " " + finalTranscript;
           accumulatedDuration += segmentDuration;
           updatePendingCard(pendingTranscript, accumulatedDuration);
         } else {
