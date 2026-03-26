@@ -39,6 +39,7 @@
   let pendingTranscript = "";
   let pendingCreatedAt = "";
   let accumulatedDuration = 0;
+  let segments = []; // { text, duration } per recording segment
 
   // --- MIME type detection (Safari prefers audio/mp4) ---
   function getSupportedMimeType() {
@@ -345,7 +346,8 @@
         }
 
         if (pendingTranscript) {
-          // Continuing: append new transcript to existing
+          // Continuing: append new segment
+          segments.push({ text: finalTranscript, duration: segmentDuration });
           pendingTranscript = pendingTranscript.trim() + " " + finalTranscript;
           accumulatedDuration += segmentDuration;
           updatePendingCard(pendingTranscript, accumulatedDuration);
@@ -353,6 +355,7 @@
           // New recording
           const createdAt = new Date().toISOString();
           pendingCreatedAt = createdAt;
+          segments = [{ text: finalTranscript, duration: segmentDuration }];
           pendingTranscript = finalTranscript;
           accumulatedDuration = segmentDuration;
           addRecordingCard({ createdAt, duration: segmentDuration }, finalTranscript);
@@ -491,6 +494,8 @@
       recordBtn.textContent = "Record";
       recordBtn.classList.remove("continue-mode");
     }
+    // Undo when multiple segments, Discard when one or zero
+    barDiscardBtn.textContent = segments.length > 1 ? "Undo" : "Discard";
   }
 
   function disableBarButtons() {
@@ -499,6 +504,7 @@
     pendingTranscript = "";
     pendingCreatedAt = "";
     accumulatedDuration = 0;
+    segments = [];
     updateRecordBtnState();
   }
 
@@ -532,9 +538,20 @@
   });
 
   barDiscardBtn.addEventListener("click", () => {
-    removeLastCard();
-    disableBarButtons();
-    barStatus.textContent = "";
+    if (segments.length <= 1) {
+      // Last segment or empty — discard everything
+      removeLastCard();
+      disableBarButtons();
+      barStatus.textContent = "";
+    } else {
+      // Undo last segment
+      segments.pop();
+      pendingTranscript = segments.map((s) => s.text).join(" ");
+      accumulatedDuration = segments.reduce((sum, s) => sum + s.duration, 0);
+      updatePendingCard(pendingTranscript, accumulatedDuration);
+      updateRecordBtnState();
+      barStatus.textContent = "";
+    }
   });
 
   // --- Event Listeners (hold-to-record) ---

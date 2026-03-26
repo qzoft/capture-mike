@@ -16,7 +16,7 @@
   <meta name="theme-color" content="#1a1a2e">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <link rel="stylesheet" href="styles.css?v=1.9.2">
+  <link rel="stylesheet" href="styles.css?v=1.9.3">
 </head>
 <body>
   <div id="app">
@@ -63,7 +63,7 @@
       <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
         <path d="M19.14 12.94a7.07 7.07 0 0 0 .06-.94 7.07 7.07 0 0 0-.06-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.04 7.04 0 0 0-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.48.41l-.36 2.54a7.04 7.04 0 0 0-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.48.48 0 0 0 .12.61l2.03 1.58a7.07 7.07 0 0 0-.06.94c0 .32.02.64.06.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 0 0 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/>
       </svg>
-      <span id="version">v1.9.2</span>
+      <span id="version">v1.9.3</span>
     </button>
 
     <!-- Bottom bar: Save | Record | Discard -->
@@ -77,7 +77,7 @@
 
   <!-- Auto-update: check version.txt and force-reload if stale -->
   <script>
-    var APP_VERSION = "1.9.2";
+    var APP_VERSION = "1.9.3";
     (async () => {
       // Clean up any old service workers or caches
       if ("serviceWorker" in navigator) {
@@ -113,6 +113,6 @@
       sessionStorage.removeItem("version-reloading");
     })();
   </script>
-  <script src="app.js?v=1.9.2"></script>
+  <script src="app.js?v=1.9.3"></script>
 </body>
 </html>
