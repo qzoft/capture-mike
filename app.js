@@ -363,6 +363,7 @@
         barDiscardBtn.disabled = false;
         barStatus.textContent = "";
         barStatus.className = "";
+        updateRecordBtnState();
       };
 
       mediaRecorder.start(100); // collect data every 100ms
@@ -482,12 +483,23 @@
   }
 
   // --- Bottom bar Save/Discard handlers ---
+  function updateRecordBtnState() {
+    if (pendingTranscript) {
+      recordBtn.textContent = "Continue";
+      recordBtn.classList.add("continue-mode");
+    } else {
+      recordBtn.textContent = "Record";
+      recordBtn.classList.remove("continue-mode");
+    }
+  }
+
   function disableBarButtons() {
     barSaveBtn.disabled = true;
     barDiscardBtn.disabled = true;
     pendingTranscript = "";
     pendingCreatedAt = "";
     accumulatedDuration = 0;
+    updateRecordBtnState();
   }
 
   function removeLastCard() {

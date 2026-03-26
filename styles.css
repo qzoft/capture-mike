@@ -189,6 +189,16 @@ body {
   box-shadow: 0 0 40px var(--accent-glow), 0 0 80px var(--accent-glow);
 }
 
+#record-btn.continue-mode {
+  background: #f39c12;
+}
+
+#record-btn.continue-mode:active,
+#record-btn.continue-mode.recording {
+  background: #d68910;
+  box-shadow: 0 0 40px rgba(243, 156, 18, 0.4), 0 0 80px rgba(243, 156, 18, 0.4);
+}
+
 #record-btn.recording {
   animation: pulse 1s infinite;
 }
