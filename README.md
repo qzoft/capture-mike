@@ -9,9 +9,12 @@ Voice-to-text PWA that captures audio, transcribes it, and saves the output as m
 - **Multi-language support** — Danish, English (US/UK), German, Swedish, Norwegian, French, Spanish
 - **Save to GitHub** — transcriptions saved as markdown files to your repo
 - **Save/Discard workflow** — review before committing
+- **Undo** — undo the last recording segment while keeping earlier ones
+- **Continue recording** — stitch multiple segments together; button turns yellow to show pending transcript
 - **iPhone Action Button** — launch and start recording via `?action=record` URL param
 - **Auto-update** — checks `version.txt` on load and force-reloads when a new version is deployed
 - **Test Connection** — verify your GitHub PAT and repo before recording
+- **Settings required** — recording is blocked until GitHub settings are configured
 
 ## Tech Stack
 
@@ -28,4 +31,6 @@ Voice-to-text PWA that captures audio, transcribes it, and saves the output as m
    - **Speech language** — pick your preferred language
 3. Tap **Test Connection** to verify access
 4. Hold the **Record** button to capture audio and transcribe
-5. **Save** to push the transcript to `recordings/YYYY-MM-DD_HH-MM-SS.md` in your repo, or **Discard** to throw it away
+5. **Continue** — tap again to add more segments (button turns yellow)
+6. **Undo** — removes the last segment if you made a mistake
+7. **Save** to push the transcript to `recordings/YYYY-MM-DD_HH-MM-SS.md` in your repo, or **Discard** to throw it all away
