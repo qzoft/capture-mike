@@ -45,6 +45,26 @@
   font-style: italic;
 }
 
+.card-transcript--editable {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  resize: vertical;
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.card-transcript--editable:focus {
+  border-color: var(--accent);
+}
+
 /* === Reset & Base === */
 *, *::before, *::after {
   box-sizing: border-box;
