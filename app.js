@@ -441,9 +441,14 @@
 
     // Transcript text
     if (transcriptText) {
-      const transcriptEl = document.createElement("p");
-      transcriptEl.className = "card-transcript";
-      transcriptEl.textContent = transcriptText;
+      const transcriptEl = document.createElement("textarea");
+      transcriptEl.className = "card-transcript card-transcript--editable";
+      transcriptEl.setAttribute("aria-label", "Edit transcript");
+      transcriptEl.value = transcriptText;
+      transcriptEl.rows = 4;
+      transcriptEl.addEventListener("input", () => {
+        pendingTranscript = transcriptEl.value;
+      });
       card.appendChild(transcriptEl);
     } else {
       const noTranscript = document.createElement("p");
@@ -469,7 +474,7 @@
     // Update transcript
     const transcriptEl = card.querySelector(".card-transcript");
     if (transcriptEl) {
-      transcriptEl.textContent = transcriptText;
+      transcriptEl.value = transcriptText;
       transcriptEl.classList.remove("card-transcript--empty");
     }
 
