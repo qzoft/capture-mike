@@ -55,10 +55,12 @@
   font-family: inherit;
   font-size: 0.85rem;
   line-height: 1.4;
-  resize: vertical;
+  resize: none;
   outline: none;
   -webkit-user-select: text;
   user-select: text;
+  flex: 1;
+  min-height: 80px;
 }
 
 .card-transcript--editable:focus {
@@ -114,6 +116,14 @@ body {
   flex: 1;
   padding: 16px 0;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#recordings-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 #version {
@@ -283,6 +293,10 @@ body {
   gap: 8px;
 }
 
+.recording-card:first-child {
+  flex: 1;
+}
+
 .recording-card .card-header {
   display: flex;
   justify-content: space-between;
@@ -413,7 +427,6 @@ body {
   font-size: 0.85rem;
   color: var(--text-dim);
   line-height: 1.4;
-  max-height: 60px;
   overflow-y: auto;
 }
 
