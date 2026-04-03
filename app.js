@@ -445,7 +445,6 @@
       transcriptEl.className = "card-transcript card-transcript--editable";
       transcriptEl.setAttribute("aria-label", "Edit transcript");
       transcriptEl.value = transcriptText;
-      transcriptEl.rows = 4;
       transcriptEl.addEventListener("input", () => {
         pendingTranscript = transcriptEl.value;
       });
