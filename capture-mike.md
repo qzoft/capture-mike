@@ -11,18 +11,34 @@
 **Storage:** PATH_LOCAL
 **Intake:**  <!-- auto -->
 **Tags:** open
+**Activity ID:** capture-mike
 
 ---
 
 ## Outcome
 
-_A working PWA voice recorder that can be installed on phone home screens, record voice memos with hold-to-record, store them locally (IndexedDB), and play/download/delete them — fully offline-capable._
+A working PWA voice recorder that installs on phone home screens: hold-to-record voice memos, store them locally in IndexedDB, and play/download/delete them — fully offline-capable.
 
 ---
 
 ## Current Focus
 
-_The core app is built. Evaluate whether it meets daily-use needs and decide on next iteration._
+The core app is built. Evaluate whether it meets daily-use needs and decide on the next iteration.
+
+---
+
+## Summary
+
+Offline-capable PWA voice recorder — hold-to-record, IndexedDB storage, play/download/delete.
+
+---
+
+## Highlights
+
+- Hold-to-record with pause/resume; local IndexedDB storage; play/download/delete.
+- iOS Safari install-to-home-screen and offline playback verified.
+- Small client-side PWA (~6 files), no backend.
+- Next: consider labels/timestamps for easier retrieval.
 
 ---
 
